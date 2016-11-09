@@ -22,11 +22,11 @@ def get_sqlite_1000inserts_thread():
     #print("pid =>", sqlite_run_pid, "tname =>", sqlite_run_tname)
     return (sqlite_run_pid, sqlite_run_tname)
 
-def collect_ftrace_data(ftrace_type):
+def collect_ftrace_data(ftrace_type, duration):
     start_cmd = './get_ftrace_io.sh ' + ftrace_type + '_start'
     stop_cmd = './get_ftrace_io.sh ' + ftrace_type + '_stop'
     os.system(start_cmd)
-    time.sleep(7)
+    time.sleep(duration)
     os.system(stop_cmd)
 
 def get_filename_from_inode(inodeNo):
@@ -106,7 +106,7 @@ def dump_inodes():
     return deviceId
 
 if __name__ == "__main__":
-    opts, args = getopt.getopt(sys.argv[1:], "hpc")
+    opts, args = getopt.getopt(sys.argv[1:], "hpc:")
     for op, value in opts:
         if op == "-h":
             print("python rlbench_trace_analyzer.py -p => -c")
@@ -116,8 +116,9 @@ if __name__ == "__main__":
             print("deviceId:", deviceId)
             sys.exit()
         elif op == "-c":
+            duration = int(value)
             (threadId, threadName) = get_sqlite_1000inserts_thread()
-            collect_ftrace_data('ext4')
+            collect_ftrace_data('ext4', duration)
             parse_ftrace_data('ext4', threadName+'-'+threadId)
             sys.exit()
 

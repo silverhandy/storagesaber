@@ -6,7 +6,8 @@ import sys
 
 CMD_FILENAME = 'debugfs_cmd.txt'
 DEBUGFS_CMD = 'debugfs'
-PROP_MODEL = "ro.build.product"
+PROP_MODEL = "ro.hardware"
+#PROP_MODEL = "ro.build.product"
 #PROP_MODEL = "ro.product.model"
 
 # Will be populated by populate_automatically_partitions
