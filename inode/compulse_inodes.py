@@ -67,8 +67,9 @@ def populate_automatically_partitions():
     for part in parts.keys():
 #        cmd = "shell stat -L -c %%T %s" %(part)
         cmd = "shell ls -l %s" %(part)
-        # print("cmd:", cmd)
+        partnumber = ''
         regexp = re.compile('\d+:\d+ [\w]+ \-\> /dev/block/mmcblk0p(\d+)$')
+        regexp2 = re.compile('\d+:\d+ /dev/block/by-name/[\w]+ \-\> /dev/block/mmcblk0p(\d+)$')
         lines = exec_adb(cmd)
         for line in lines:
             if line:
@@ -76,8 +77,12 @@ def populate_automatically_partitions():
                 #bdev = "/dev/block/mmcblk0p%s" % int(partnumber,16)
                 #converted[bdev] = parts[part]
                 m = regexp.search(line)
+                m2 = regexp2.search(line)
                 if m:
                     partnumber = m.group(1)
+                    bdev = "/dev/block/mmcblk0p%s" % int(partnumber)
+                elif m2:
+                    partnumber = m2.group(1)
                     bdev = "/dev/block/mmcblk0p%s" % int(partnumber)
 
         if partnumber:
