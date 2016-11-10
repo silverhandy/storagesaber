@@ -81,17 +81,20 @@ def parse_ftrace_data(ftrace_type, threadLabel):
 def dump_inodes():
     root_cmd = 'root'
     remount_cmd = 'remount'
+    wait_cmd = 'wait-for-devices'
     disable_verity = 'disable-verity'
     reboot_cmd = 'reboot'
     devices_cmd = 'devices'
+    prepare_cmd = './inode/prepare.sh'
     os.system('adb ' + root_cmd)
     time.sleep(2)
     status, output = commands.getstatusoutput('adb ' + disable_verity)
     if output.find('Verity already disabled') == -1:
         os.system('adb ' + reboot_cmd)
-        time.sleep(30)
+        os.system('adb ' + wait_cmd)
         os.system('adb ' + root_cmd)
         time.sleep(2)
+        os.system(prepare_cmd)
     os.system('adb ' + remount_cmd)
     status, output = commands.getstatusoutput('adb ' + devices_cmd)
     lines = output.splitlines()
